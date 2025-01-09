@@ -1,5 +1,4 @@
 import enum
-import sys
 
 class Token:
     def __init__(self, token_value, token_kind):
@@ -115,8 +114,8 @@ class Lexer:
         return self.source[self.current_pos+1]
 
     def abort(self, message):
-        sys.exit("Lexing Error: " + message)
-
+        raise Exception(f"\nLexing Error: {message}\n")
+        
     def skip_whitespace(self):
         while self.current_char in whitespace:
             self.next_char()
@@ -143,6 +142,16 @@ class Lexer:
             token = Token(self.current_char, TokenType.ABSOLUTE)
         elif self.current_char == "_":
             token = Token(self.current_char, TokenType.PAGED)
+        elif self.current_char == "*":
+            token = Token(self.current_char, TokenType.VECTOR)
+        elif self.current_char == ".":
+            token = Token(self.current_char, TokenType.LABEL)
+        elif self.current_char == "+":
+            token = Token(self.current_char, TokenType.CONSTANT)
+        elif self.current_char == "=":
+            token = Token(self.current_char, TokenType.LINE)
+        elif self.current_char == "~":
+            token = Token(self.current_char, TokenType.WORD)
         elif self.current_char == "\"":
             
             self.next_char()

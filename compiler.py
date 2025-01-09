@@ -1,6 +1,5 @@
 from lexer_module import *
 from parser_module import *
-import sys
 
 asm_file_ext = "pasm"
 
@@ -35,6 +34,7 @@ def main(user_input):
     
     lexer = Lexer(source)
     parser = Parser(lexer, f)
+
     compiled_program, _ = parser.program()
 
     for item in compiled_program:
@@ -44,11 +44,17 @@ def main(user_input):
 
     print("\n\nCompiling successful.")
 
+def start():
+    stay = True
 
-stay = True
+    while stay:
 
-while stay:
+        user_input = input("? ")
+        if user_input in ["", "q", "quit"]: stay = False
+        else:
+            try:
+                main(user_input)
+            except Exception as e:
+                print(e)
 
-    user_input = input("? ")
-    if user_input in ["", "q", "quit"]: stay = False
-    else: main(user_input)
+start()

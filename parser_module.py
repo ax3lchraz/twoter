@@ -1,5 +1,4 @@
 from lexer_module import *
-import sys
 
 eight_bit_register_list = [TokenType.XH, TokenType.XL, TokenType.YH, TokenType.YL, TokenType.H, TokenType.L, TokenType.ACC, TokenType.SP]
 eight_bit_register_reference = {"XH":"0","XL":"1","YH":"2","YL":"3","H":"4","L":"5","ACC":"6","SP":"7",}
@@ -56,8 +55,7 @@ class Parser:
         self.peek_token = self.lexer.get_token()
 
     def abort(self, message):
-        
-        sys.exit("Parser Error: " + message)
+        raise Exception(f"Parser Error: {message}")
 
     def new_line(self):
         
@@ -885,7 +883,6 @@ class Parser:
 
                 row = "7"
                 self.next_token()
-            
 
             if self.check_token(prepositions):
                 self.next_token()
