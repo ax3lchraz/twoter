@@ -32,20 +32,15 @@ def main(user_input):
     print("\n=== PARSER ===\n")
 
     f = open(f"{__file__}/../programs/{user_input}.txt", "w")
-    debug_f = open(f"{__file__}/../compiled_numbered.txt", "w")
     
     lexer = Lexer(source)
     parser = Parser(lexer, f)
-    compiled_program, debug_program = parser.program()
+    compiled_program, _ = parser.program()
 
     for item in compiled_program:
         f.write(item)
-
-    for item in debug_program:
-        debug_f.write(item)
     
     f.close()
-    debug_f.close()
 
     print("\n\nCompiling successful.")
 

@@ -137,6 +137,12 @@ class Lexer:
             token = Token(self.current_char, TokenType.EOF)
         elif self.current_char == "-":
             token = Token(self.current_char, TokenType.MINUS)
+        elif self.current_char == "#":
+            token = Token(self.current_char, TokenType.IMMEDIATE)
+        elif self.current_char == "@":
+            token = Token(self.current_char, TokenType.ABSOLUTE)
+        elif self.current_char == "_":
+            token = Token(self.current_char, TokenType.PAGED)
         elif self.current_char == "\"":
             
             self.next_char()

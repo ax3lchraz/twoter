@@ -21,12 +21,14 @@ Now the emulator should be up and running!
 Be default, the computer will be running from address
 $0200 and in Keyboard Mode. To toggle Keyboard Mode, press
 the ` key. Pressing r will reset the computer, and Space
-toggles the clock. To toggle the light panel, press the Numpad
-'+' key.
+toggles the clock. To toggle the light panel, press the
+Numpad + key. NOTICE: Disabling the light panel also
+disables the 
 
 Running code and setting up memory is fairly simple. The
-contents of mem.txt are loaded into the computer's memory
-when reset. If you change this file, you'll have to reset the
+contents of the text files in the 'programs' directory
+are loaded into the computer's memory when reset. If you
+change this file, you'll have to reset the
 computer to load it.
 
 Furthermore, when loading memory, new lines and whitespace are
@@ -43,3 +45,8 @@ is equivalent to this:
 If you want to jump to a specific line, simply type 'ln'
 followed by the hex address. For example, to jump to line
 $0200, type ln0200.
+
+As for the compiler, I included the pseudo assembly UDL for
+Notepad ++. It's not required for programming in the pseudo
+assembly language, it's just the best way I could find to get
+the syntax highlighting I wanted with ease.
