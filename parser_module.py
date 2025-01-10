@@ -253,7 +253,7 @@ class Parser:
         counter_high_hex = f"0x{counter_hex[0:2]}"
         counter_low_hex = f"0x{counter_hex[2:4]}"
 
-        #LINE HEX_ADDRESS
+        # LINE HEX_ADDRESS
         if self.check_token(TokenType.LINE):
             
             self.next_token()
@@ -261,7 +261,7 @@ class Parser:
             self.counter = int(self.current_token.value, 16)
             self.to_append.append(f"ln{self.current_token.value}")
 
-        #LABEL USER_VAL
+        # LABEL USER_VAL
         elif self.check_token(TokenType.LABEL):
             
             self.next_token()
@@ -271,7 +271,7 @@ class Parser:
 
             self.labels_declared[self.current_token.value] = [counter_high_hex, counter_low_hex]
 
-        #VECTOR USER_VAL HEX_ADDRESS
+        # VECTOR USER_VAL HEX_ADDRESS
         elif self.check_token(TokenType.VECTOR):
             
             self.next_token()
