@@ -26,4 +26,7 @@ Data $406E $23 $00
 Word $4070 "dump"
 Data $407E $26 $00
 
-Byte $4080 $80
+Word $4080 "cmp_chk"
+Data $408E $30 $00
+
+Byte $4090 $80
