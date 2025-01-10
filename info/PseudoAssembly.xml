@@ -26,7 +26,7 @@
             <Keywords name="Folders in comment, close"></Keywords>
             <Keywords name="Keywords1">Add&#x000D;&#x000A;Subtract&#x000D;&#x000A;Compare&#x000D;&#x000A;And&#x000D;&#x000A;Or&#x000D;&#x000A;Xor&#x000D;&#x000A;Not&#x000D;&#x000A;Invert&#x000D;&#x000A;Increment&#x000D;&#x000A;Decrement&#x000D;&#x000A;Rotate&#x000D;&#x000A;Shift&#x000D;&#x000A;Load&#x000D;&#x000A;Store&#x000D;&#x000A;Move&#x000D;&#x000A;Nop&#x000D;&#x000A;Clear&#x000D;&#x000A;Halt&#x000D;&#x000A;Jump&#x000D;&#x000A;Subroutine&#x000D;&#x000A;Return&#x000D;&#x000A;Push&#x000D;&#x000A;Pop&#x000D;&#x000A;&#x000D;&#x000A;Right&#x000D;&#x000A;Left&#x000D;&#x000A;Not&#x000D;&#x000A;Carry&#x000D;&#x000A;Borrow&#x000D;&#x000A;Negative&#x000D;&#x000A;Zero&#x000D;&#x000A;if If</Keywords>
             <Keywords name="Keywords2"></Keywords>
-            <Keywords name="Keywords3">Line&#x000D;&#x000A;Vector&#x000D;&#x000A;Constant&#x000D;&#x000A;Label&#x000D;&#x000A;Word&#x000D;&#x000A;Data&#x000D;&#x000A;Absolute&#x000D;&#x000A;Indirect&#x000D;&#x000A;Paged&#x000D;&#x000A;Immediate</Keywords>
+            <Keywords name="Keywords3">Line&#x000D;&#x000A;Vector&#x000D;&#x000A;Constant&#x000D;&#x000A;Label&#x000D;&#x000A;Word&#x000D;&#x000A;Data&#x000D;&#x000A;Byte&#x000D;&#x000A;Absolute&#x000D;&#x000A;Indirect&#x000D;&#x000A;Paged&#x000D;&#x000A;Immediate</Keywords>
             <Keywords name="Keywords4">Xh Xl Xhl Yh Yl Yhl H L HL Acc SP PC</Keywords>
             <Keywords name="Keywords5">at with to into if</Keywords>
             <Keywords name="Keywords6">* . + = ~</Keywords>

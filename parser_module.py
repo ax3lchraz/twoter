@@ -406,8 +406,6 @@ class Parser:
             elif self.check_token(TokenType.HEX_ADDRESS):
 
                 addr_hex = self.current_token.value
-                addr_high_hex = f"0x{addr_hex[0:2]}"
-                addr_low_hex = f"0x{addr_hex[2:4]}"
 
                 self.next_token()
                 self.match_token(TokenType.STRING)
@@ -464,10 +462,6 @@ class Parser:
             elif self.check_token(TokenType.HEX_ADDRESS):
 
                 addr_hex = self.current_token.value
-                addr_high_hex = f"0x{addr_hex[0:2]}"
-                addr_low_hex = f"0x{addr_hex[2:4]}"
-                self.vectors_declared[vector_name] = [addr_high_hex, addr_low_hex]
-                
                 self.to_append.append(f"ln{addr_hex}")
 
                 self.next_token()
@@ -518,10 +512,6 @@ class Parser:
             elif self.check_token(TokenType.HEX_ADDRESS):
 
                 addr_hex = self.current_token.value
-                addr_high_hex = f"0x{addr_hex[0:2]}"
-                addr_low_hex = f"0x{addr_hex[2:4]}"
-                self.vectors_declared[vector_name] = [addr_high_hex, addr_low_hex]
-                
                 self.data_list_to_block(addr_hex)
 
             else:
