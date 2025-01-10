@@ -77,7 +77,6 @@ def two_comp(num):
     
     return num
 
-
 def fetch_mem():
 
     new_mem = [0 for _ in range(0, 65536)]
@@ -121,6 +120,7 @@ class computer:
         self.phase_A = False
         self.phase_B = True
         self.run = False
+        self.single_step = False
 
         self.carry = False
         self.negative = False
@@ -171,6 +171,7 @@ class computer:
         self.phase_A = False
         self.phase_B = True
         self.run = False
+        self.single_step = False
 
         self.carry = False
         self.negative = False
@@ -254,6 +255,9 @@ class computer:
             if self.rc_rst:
                 self.rc_rst = False
                 self.rc = 1
+
+                if self.single_step:
+                    self.run = False
 
         # Reset some control lines and the busses
 

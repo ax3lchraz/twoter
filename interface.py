@@ -12,11 +12,11 @@ panel = """
 │ ╒══════PC══════╕ │ ╒═FLGS═╕ │                                                            │
 │ xxxxxxxxxxxxxxxx │ CxZxNxIx │                                                            │
 ├──────────────────┼──────────┤                                                            │
-│ ╒══Xh══╕╒══Xl══╕ │          │                                                            │
-│ xxxxxxxxxxxxxxxx │          │                                                            │
+│ ╒══Xh══╕╒══Xl══╕ │ ╒S CTRL╕ │                                                            │
+│ xxxxxxxxxxxxxxxx │ xxxxxxxx │                                                            │
 │ ╒══Yh══╕╒══Yl══╕ │          │                                                            │
-│ xxxxxxxxxxxxxxxx │          │                                                            │
-│ ╒══════HL══════╕ │          │                                                            │
+│ xxxxxxxxxxxxxxxx │ 1 STEP x │                                                            │
+│ ╒══════HL══════╕ ├──────────┤                                                            │
 │ xxxxxxxxxxxxxxxx │          │                                                            │
 │ ╒══Th══╕╒══Tl══╕ │          │                                                            │
 │ xxxxxxxxxxxxxxxx │          │                                                            │
@@ -54,7 +54,7 @@ def mem_dump(data):
     
 
 #└ ┐ ┘ ┌  ┤ ├ ┴ ┬ ┼ ─ │ ▲ ▼ ●
-def update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, terminal_lines, full_disp):
+def update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, terminal_lines, full_disp, current_speed):
 
     twoter.update()
 
@@ -117,7 +117,8 @@ def update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, termin
         [twoter.interrupt, 7, 28, 2],
         [twoter.mem_rd, 19, 23, 2],
         [twoter.mem_wt, 19, 28, 2],
-        [k_mode, 2, 32, 2]
+        [k_mode, 2, 32, 2],
+        [twoter.single_step, 12, 28, 6]
     ]
 
     for light in single_lights:
@@ -147,7 +148,8 @@ def update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, termin
         [twoter.ac, 8, 19, 2, 6],
         [twoter.db, 8, 19, 10, 2],
         [twoter.ab, 16, 21, 2, 5],
-        [twoter.rc, 8, 5, 21, 2]
+        [twoter.rc, 8, 5, 21, 2],
+        [2 ** current_speed, 8, 10, 21, 2]
     ]
 
     for light in group_lights:
@@ -212,10 +214,14 @@ def main(stdscr):
 
     stdscr.addstr(panel)
 
-    terminal_y, terminal_x, current_user_in, terminal_lines, full_disp = update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, terminal_lines, full_disp)
+    current_speed = 0
+    max_speed = 7
+    speed_step = 0
+
+    terminal_y, terminal_x, current_user_in, terminal_lines, full_disp = update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, terminal_lines, full_disp, current_speed)
     stdscr.refresh()
 
-    full_disp = False
+    full_disp = True
     
     while not exit:
         last_input = stdscr.getch()
@@ -231,6 +237,12 @@ def main(stdscr):
         elif last_input == 114 and k_mode == False: # r Key
             twoter.reset()
             twoter.mem_refresh()
+        elif last_input == 115 and not k_mode: # s Key
+            current_speed += 1
+            if current_speed > max_speed:
+                current_speed = 0
+        elif last_input == 116 and not k_mode: #t Key
+            twoter.single_step = ~twoter.single_step
         elif last_input == 96: # ` Key, Keyboard Mode
             k_mode = not k_mode
         elif last_input == 459:
@@ -239,8 +251,12 @@ def main(stdscr):
             full_disp = not full_disp
         elif k_mode and last_input > 0:
             twoter.memory[0] = last_input
-        
-        terminal_y, terminal_x, current_user_in, terminal_lines, full_disp = update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, terminal_lines, full_disp)
+
+        speed_step += 1
+        if speed_step >= 2 ** current_speed:
+            speed_step = 0
+            terminal_y, terminal_x, current_user_in, terminal_lines, full_disp = update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, terminal_lines, full_disp, current_speed)
+            
         stdscr.refresh()
 
     endwin()
