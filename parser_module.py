@@ -251,7 +251,7 @@ class Parser:
         counter_high_hex = f"0x{counter_hex[0:2]}"
         counter_low_hex = f"0x{counter_hex[2:4]}"
 
-        #LINE HEX_ADDRESS
+        # LINE HEX_ADDRESS
         if self.check_token(TokenType.LINE):
             
             self.next_token()
@@ -259,7 +259,7 @@ class Parser:
             self.counter = int(self.current_token.value, 16)
             self.to_append.append(f"ln{self.current_token.value}")
 
-        #LABEL USER_VAL
+        # LABEL USER_VAL
         elif self.check_token(TokenType.LABEL):
             
             self.next_token()
@@ -269,7 +269,7 @@ class Parser:
 
             self.labels_declared[self.current_token.value] = [counter_high_hex, counter_low_hex]
 
-        #VECTOR USER_VAL HEX_ADDRESS
+        # VECTOR USER_VAL HEX_ADDRESS
         elif self.check_token(TokenType.VECTOR):
             
             self.next_token()
@@ -320,6 +320,80 @@ class Parser:
                 self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
 
             self.constants_declared[constant_name] = constant_value
+            
+        # DATA [ USER_VAL ] HEX_ADDRESS ( HEX_NUMBER | [MINUS] DEC_NUMBER )
+        elif self.check_token(TokenType.DATA):
+        
+            self.next_token()
+            
+            if self.check_token(TokenType.USER_VAL):
+            
+                if self.current_token.value in self.vectors_declared: self.abort(f"Vector {self.current_token.value} already exists in program.")
+
+                vector_name = self.current_token.value
+
+                self.next_token()
+                self.match_token(TokenType.HEX_ADDRESS)
+
+                addr_hex = self.current_token.value
+                addr_high_hex = f"0x{addr_hex[0:2]}"
+                addr_low_hex = f"0x{addr_hex[2:4]}"
+                self.vectors_declared[vector_name] = [addr_high_hex, addr_low_hex]
+                
+                self.to_append.append(f"ln{addr_hex}")
+
+                self.next_token()
+                if self.check_token(TokenType.HEX_NUMBER):
+
+                    self.to_append.append(f"0x{self.current_token.value}")
+
+                elif self.check_token(TokenType.MINUS):
+
+                    self.next_token()
+                    self.match_token(TokenType.DEC_NUMBER)
+
+                    self.to_append.append(str((~int(self.current_token.value)) + 1))
+
+                elif self.check_token(TokenType.DEC_NUMBER):
+
+                    self.to_append.append(self.current_token.value)
+
+                else:
+                    
+                    self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
+                
+            elif self.check_token(TokenType.HEX_ADDRESS):
+            
+                addr_hex = self.current_token.value
+                addr_high_hex = f"0x{addr_hex[0:2]}"
+                addr_low_hex = f"0x{addr_hex[2:4]}"
+                self.vectors_declared[vector_name] = [addr_high_hex, addr_low_hex]
+                
+                self.to_append.append(f"ln{addr_hex}")
+
+                self.next_token()
+                if self.check_token(TokenType.HEX_NUMBER):
+
+                    self.to_append.append(f"0x{self.current_token.value}")
+
+                elif self.check_token(TokenType.MINUS):
+
+                    self.next_token()
+                    self.match_token(TokenType.DEC_NUMBER)
+
+                    self.to_append.append(str((~int(self.current_token.value)) + 1))
+
+                elif self.check_token(TokenType.DEC_NUMBER):
+
+                    self.to_append.append(self.current_token.value)
+
+                else:
+                    
+                    self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
+                
+            else:
+            
+                self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
 
         # WORD [USER_VAL] HEX_ADDRESS STRING
         elif self.check_token(TokenType.WORD):
