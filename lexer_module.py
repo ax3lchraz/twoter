@@ -81,6 +81,7 @@ class TokenType(enum.Enum):
     CONSTANT = 143
     LINE = 144
     WORD = 152
+    DATA = 159
 
     AT = 153
     WITH = 154
