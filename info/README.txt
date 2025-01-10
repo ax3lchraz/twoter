@@ -23,7 +23,11 @@ $0200 and in Keyboard Mode. To toggle Keyboard Mode, press
 the ` key. Pressing r will reset the computer, and Space
 toggles the clock. To toggle the light panel, press the
 Numpad + key. NOTICE: Disabling the light panel also
-disables the 
+disables the Keyboad Mode indicator. The s key will
+cycle through speed modes, the speed being divided by
+the number shown on S CTRL. The t key toggles Single
+Step mode, which halts the computer after the
+complete execution of one instruction.
 
 Running code and setting up memory is fairly simple. The
 contents of the text files in the 'programs' directory
