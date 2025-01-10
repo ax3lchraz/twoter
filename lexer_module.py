@@ -82,6 +82,9 @@ class TokenType(enum.Enum):
     LINE = 144
     WORD = 152
     DATA = 159
+    BYTE = 160
+    LIST = 161
+    
 
     AT = 153
     WITH = 154
@@ -153,8 +156,10 @@ class Lexer:
             token = Token(self.current_char, TokenType.LINE)
         elif self.current_char == "~":
             token = Token(self.current_char, TokenType.WORD)
-        elif self.current_char == "~":
-            token = Token(self.current_char, TokenType.DATA)
+        elif self.current_char == ":":
+            token = Token(self.current_char, TokenType.BYTE)
+        elif self.current_char == ",":
+            token = Token(self.current_char, TokenType.LIST)
         elif self.current_char == "?":
             token = Token(self.current_char, TokenType.IF)
         elif self.current_char == "!":

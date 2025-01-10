@@ -187,6 +187,62 @@ class Parser:
 
         self.to_append.append("\n\n")
 
+    def data_list_to_block(self, hex_address):
+
+        self.counter = int(hex_address, 16)
+        self.to_append.append(f"ln{hex_address}")
+        self.to_append.append("\n\n")
+
+        position = 0
+
+        while self.check_peek([TokenType.HEX_NUMBER, TokenType.MINUS, TokenType.DEC_NUMBER]):
+
+            self.next_token()
+            position += 1
+            value_to_add = None
+
+            if self.check_token(TokenType.HEX_NUMBER):
+
+                value_to_add = f"0x{self.current_token.value}"
+
+            elif self.check_token(TokenType.MINUS):
+
+                self.next_token()
+                self.match_token(TokenType.DEC_NUMBER)
+
+                value_to_add = str((~int(self.current_token.value)) + 1)
+
+            elif self.check_token(TokenType.DEC_NUMBER):
+
+                value_to_add = str(self.current_token.value)
+
+            self.to_append.append(value_to_add)
+
+            if position % 4 == 0: self.to_append.append("\t")
+            if position % 16 == 0: self.to_append.append("\n")
+            if position % 64 == 0: self.to_append.append("\n")
+            if position % 256 == 0: self.to_append.append("\n\n\n")
+
+        self.to_append.append("\n\n")
+
+    def declare_vector(self, address, name):
+
+        addr_high = f"0x{address[0:2]}"
+        addr_low = f"0x{address[2:4]}"
+        self.vectors_declared[name] = [addr_high, addr_low]
+
+    def declare_label(self, address, name):
+        
+        addr_high = f"0x{address[0:2]}"
+        addr_low = f"0x{address[2:4]}"
+        self.labels_declared[name] = [addr_high, addr_low]
+
+    def declare_constant(self, address, name, value):
+
+        self.to_append.append(f"{address}")
+
+        
+        self.constants_declared[name] = value
 
     def absolute_address(self, opcode):
 
@@ -320,80 +376,6 @@ class Parser:
                 self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
 
             self.constants_declared[constant_name] = constant_value
-            
-        # DATA [ USER_VAL ] HEX_ADDRESS ( HEX_NUMBER | [MINUS] DEC_NUMBER )
-        elif self.check_token(TokenType.DATA):
-        
-            self.next_token()
-            
-            if self.check_token(TokenType.USER_VAL):
-            
-                if self.current_token.value in self.vectors_declared: self.abort(f"Vector {self.current_token.value} already exists in program.")
-
-                vector_name = self.current_token.value
-
-                self.next_token()
-                self.match_token(TokenType.HEX_ADDRESS)
-
-                addr_hex = self.current_token.value
-                addr_high_hex = f"0x{addr_hex[0:2]}"
-                addr_low_hex = f"0x{addr_hex[2:4]}"
-                self.vectors_declared[vector_name] = [addr_high_hex, addr_low_hex]
-                
-                self.to_append.append(f"ln{addr_hex}")
-
-                self.next_token()
-                if self.check_token(TokenType.HEX_NUMBER):
-
-                    self.to_append.append(f"0x{self.current_token.value}")
-
-                elif self.check_token(TokenType.MINUS):
-
-                    self.next_token()
-                    self.match_token(TokenType.DEC_NUMBER)
-
-                    self.to_append.append(str((~int(self.current_token.value)) + 1))
-
-                elif self.check_token(TokenType.DEC_NUMBER):
-
-                    self.to_append.append(self.current_token.value)
-
-                else:
-                    
-                    self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
-                
-            elif self.check_token(TokenType.HEX_ADDRESS):
-            
-                addr_hex = self.current_token.value
-                addr_high_hex = f"0x{addr_hex[0:2]}"
-                addr_low_hex = f"0x{addr_hex[2:4]}"
-                self.vectors_declared[vector_name] = [addr_high_hex, addr_low_hex]
-                
-                self.to_append.append(f"ln{addr_hex}")
-
-                self.next_token()
-                if self.check_token(TokenType.HEX_NUMBER):
-
-                    self.to_append.append(f"0x{self.current_token.value}")
-
-                elif self.check_token(TokenType.MINUS):
-
-                    self.next_token()
-                    self.match_token(TokenType.DEC_NUMBER)
-
-                    self.to_append.append(str((~int(self.current_token.value)) + 1))
-
-                elif self.check_token(TokenType.DEC_NUMBER):
-
-                    self.to_append.append(self.current_token.value)
-
-                else:
-                    
-                    self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
-                
-            else:
-            
-                self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
 
         # WORD [USER_VAL] HEX_ADDRESS STRING
         elif self.check_token(TokenType.WORD):
@@ -438,11 +420,11 @@ class Parser:
 
                 self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
 
-        # DATA [ USER_VAL ] HEX_ADDRESS ( HEX_NUMBER | [MINUS] DEC_NUMBER )
-        elif self.check_token(TokenType.DATA):
+        # BYTE [ USER_VAL ] HEX_ADDRESS ( HEX_NUMBER | [MINUS] DEC_NUMBER )
+        elif self.check_token(TokenType.BYTE):  
         
             self.next_token()
-            
+
             if self.check_token(TokenType.USER_VAL):
             
                 if self.current_token.value in self.vectors_declared: self.abort(f"Vector {self.current_token.value} already exists in program.")
@@ -476,6 +458,73 @@ class Parser:
                     self.to_append.append(self.current_token.value)
 
                 else:
+                    
+                    self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
+
+            elif self.check_token(TokenType.HEX_ADDRESS):
+
+                addr_hex = self.current_token.value
+                addr_high_hex = f"0x{addr_hex[0:2]}"
+                addr_low_hex = f"0x{addr_hex[2:4]}"
+                self.vectors_declared[vector_name] = [addr_high_hex, addr_low_hex]
+                
+                self.to_append.append(f"ln{addr_hex}")
+
+                self.next_token()
+                if self.check_token(TokenType.HEX_NUMBER):
+
+                    self.to_append.append(f"0x{self.current_token.value}")
+
+                elif self.check_token(TokenType.MINUS):
+
+                    self.next_token()
+                    self.match_token(TokenType.DEC_NUMBER)
+
+                    self.to_append.append(str((~int(self.current_token.value)) + 1))
+
+                elif self.check_token(TokenType.DEC_NUMBER):
+
+                    self.to_append.append(self.current_token.value)
+
+                else:
+                    
+                    self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
+
+            else:
+                    
+                    self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
+
+        # DATA [ USER_VAL ] HEX_ADDRESS { ( HEX_NUMBER | [MINUS] DEC_NUMBER ) }
+        elif self.check_token(TokenType.DATA):
+            
+            self.next_token()
+
+            if self.check_token(TokenType.USER_VAL):
+            
+                if self.current_token.value in self.vectors_declared: self.abort(f"Vector {self.current_token.value} already exists in program.")
+
+                vector_name = self.current_token.value
+
+                self.next_token()
+                self.match_token(TokenType.HEX_ADDRESS)
+
+                addr_hex = self.current_token.value
+                addr_high_hex = f"0x{addr_hex[0:2]}"
+                addr_low_hex = f"0x{addr_hex[2:4]}"
+                self.vectors_declared[vector_name] = [addr_high_hex, addr_low_hex]
+                
+                self.data_list_to_block(addr_hex)
+
+            elif self.check_token(TokenType.HEX_ADDRESS):
+
+                addr_hex = self.current_token.value
+                addr_high_hex = f"0x{addr_hex[0:2]}"
+                addr_low_hex = f"0x{addr_hex[2:4]}"
+                self.vectors_declared[vector_name] = [addr_high_hex, addr_low_hex]
+                
+                self.data_list_to_block(addr_hex)
+
+            else:
                     
                     self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
 
