@@ -8,7 +8,7 @@ class Token:
     @staticmethod
     def check_keyword(token_value):
         for kind in TokenType:
-            if kind.name == token_value:
+            if kind.name == token_value and 100 <= kind.value <= 200:
                 return kind
         return None
 
@@ -153,6 +153,12 @@ class Lexer:
             token = Token(self.current_char, TokenType.LINE)
         elif self.current_char == "~":
             token = Token(self.current_char, TokenType.WORD)
+        elif self.current_char == "~":
+            token = Token(self.current_char, TokenType.DATA)
+        elif self.current_char == "?":
+            token = Token(self.current_char, TokenType.IF)
+        elif self.current_char == "!":
+            token = Token(self.current_char, TokenType.NOT)
         elif self.current_char == "\"":
             
             self.next_char()
