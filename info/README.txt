@@ -53,7 +53,9 @@ $0200, type ln0200.
 As for the compiler, I included the pseudo assembly UDL for
 Notepad ++. It's not required for programming in the pseudo
 assembly language, it's just the best way I could find to get
-the syntax highlighting I wanted with ease.
+the syntax highlighting I wanted with ease. MAKE SURE YOUR
+ASSEMBLY FILES END IN .pasm! Either that, or change asm_file_ext
+in compiler.py to something else like txt.
 
 If you wanna see what programs are already set up, type and enter
 'list.' The dump and DD16 commands take one command line argument,
