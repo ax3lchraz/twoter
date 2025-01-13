@@ -54,3 +54,9 @@ As for the compiler, I included the pseudo assembly UDL for
 Notepad ++. It's not required for programming in the pseudo
 assembly language, it's just the best way I could find to get
 the syntax highlighting I wanted with ease.
+
+If you wanna see what programs are already set up, type and enter
+'list.' The dump and DD16 commands take one command line argument,
+dump requiring a two digit hex number, and DD16 requiring a four
+digit hex number. 'dump 20' will display the memory contents at
+page 20, i.e. 0x2000-0x20FF. DD16 FFFF will output 65535.
