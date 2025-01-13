@@ -97,8 +97,6 @@ class Parser:
         for item in self.constants_used:
             if item not in self.constants_declared.keys(): self.abort(f"Constant {item} used but not declared")
 
-        counter = 0
-
         return_list = []
         return_debug_list = []
 
@@ -107,17 +105,15 @@ class Parser:
             if len(self.program_list[line]) == 0:
                 continue
 
-            hex_counter = hex(counter)[2:].zfill(4)
-            print(f"\n{hex_counter} : ", end="")
-            counter += len(self.program_list[line])
-            return_debug_list.append(f"{hex_counter} : ")
+            return_debug_list.append(f"{self.program_list[line][0]} : ")
+
+            print(f"{self.program_list[line][0]} :", end=" ")
+
+            self.program_list[line] = self.program_list[line][1]
 
             for item in range(len(self.program_list[line])):
 
                 check_item = self.program_list[line][item]
-
-                if check_item.startswith("ln"):
-                    counter = int(check_item[2:], 16)
 
                 for label, value in self.labels_declared.items():
 
@@ -141,6 +137,8 @@ class Parser:
                 print(f"{self.program_list[line][item]}", end=" ")
                 return_list.append(f"{self.program_list[line][item]} ")
                 return_debug_list.append(f"{self.program_list[line][item]} ")
+
+            print("")
 
             return_list.append("\n")
             return_debug_list.append("\n")
@@ -522,6 +520,7 @@ class Parser:
         #HALT
         elif self.check_token(TokenType.HALT):
 
+            self.counter += 1
             self.to_append.append("0o070")
 
         # CLEAR ( CARRY | NEGATIVE | ZERO | INTERRUPT | FLAGS )
@@ -1112,21 +1111,25 @@ class Parser:
 
             elif self.check_token(TokenType.XH):
 
+                self.counter += 1
                 column = "4"
                 self.to_append.append(f"0o{block}{row}{column}")
 
             elif self.check_token(TokenType.XL):
 
+                self.counter += 1
                 column = "5"
                 self.to_append.append(f"0o{block}{row}{column}")
 
             elif self.check_token(TokenType.YH):
 
+                self.counter += 1
                 column = "6"
                 self.to_append.append(f"0o{block}{row}{column}")
 
             elif self.check_token(TokenType.YL):
 
+                self.counter += 1
                 column = "7"
                 self.to_append.append(f"0o{block}{row}{column}")
 
@@ -1139,5 +1142,5 @@ class Parser:
 
             self.abort("Invalid Statement: " + self.current_token.value + " (" + self.current_token.kind.name + ")")
 
-        self.program_list.append(self.to_append)
+        self.program_list.append([counter_hex, self.to_append])
         self.new_line()

@@ -74,7 +74,6 @@ class TokenType(enum.Enum):
     INDIRECT = 138
     PAGED = 139
     IMMEDIATE = 140
-    REGISTER = 149
 
     LABEL = 141
     VECTOR = 142
