@@ -36,4 +36,12 @@ Word $A080 "cmp_chk"
 Word $A08E "C"
 Byte $A08F $30
 
-Byte $A090 $80
+Word $A090 "folder"
+Word $A09E "D"
+Byte $A09F $A1
+
+Word $A0A0 "text_file"
+Word $A0AE "T"
+Byte $A0AF $A1
+
+Byte $A0B0 $80

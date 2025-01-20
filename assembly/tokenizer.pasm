@@ -28,8 +28,13 @@ Increment Xhl
 
 Compare with Constant SPACE
 Jump if Zero to Label EXIT
+
+Decrement Xhl ; Done to fix positioning at end of statement
+
 Compare with Constant EOT
 Jump if Zero to Label EXIT
+
+Increment Xhl
 
 Store Acc at Indirect Yhl
 Increment Yhl

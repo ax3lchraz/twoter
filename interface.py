@@ -84,7 +84,7 @@ def update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, termin
                 stdscr.addstr(index, 32, "                                                           ")
                 stdscr.addstr(index, 32, terminal_lines[index + (len(terminal_lines)-23)], color_pair(10))
 
-    stdscr.addstr(terminal_y, terminal_x, "_ ", color_pair(10))
+    stdscr.addstr(terminal_y, terminal_x, "█ ", color_pair(10))
     
     """
     stdscr.addstr(10, 21, str(twoter.reg_Xh)+"  ", color_pair(2))
@@ -102,6 +102,13 @@ def update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, termin
     stdscr.addstr(16, 32, str(twoter.reg_Thl)+"    ", color_pair(3))
     """
 
+    # Show K Mode regardless of screen update
+
+    if k_mode:
+        stdscr.addstr(2, 32, "●", color_pair(2))
+    else:
+        stdscr.addstr(2, 32, "○", color_pair(2))
+
     if not full_disp:
         return terminal_y, terminal_x, current_user_in, terminal_lines, full_disp
     
@@ -117,7 +124,6 @@ def update_panel(stdscr, k_mode, terminal_y, terminal_x, current_user_in, termin
         [twoter.interrupt, 7, 28, 2],
         [twoter.mem_rd, 19, 23, 2],
         [twoter.mem_wt, 19, 28, 2],
-        [k_mode, 2, 32, 2],
         [twoter.single_step, 12, 28, 6]
     ]
 

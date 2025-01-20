@@ -84,4 +84,4 @@ Store Xl at *PAGE_BYTE
 Subroutine $0200
 Return
 
-Word $0FC0 "Program Not Found.\n"
+Word $0FC0 "Command Not Found.\n"

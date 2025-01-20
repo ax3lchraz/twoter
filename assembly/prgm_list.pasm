@@ -22,16 +22,17 @@ Constant START_PAGE $A0
 Vector CURRENT_PAGE $16F0
 Vector CURRENT_BYTE $16F1
 
-Word TO_DISP $1680 "\n    NAME         EXT  PG\n"
+Word TO_DISP $16C0 "\n    NAME         EXT  PG\n"
 
 ; Program Section
 
 Line $1600
 
 Load H with #$16
-Load L with #$80
+Load L with #$C0
 
 Subroutine *SUB_DISPLAY
+Subroutine *SUB_GET_TOKEN
 
 Load Xh with Constant START_PAGE
 Load Xl with #$00
@@ -44,6 +45,8 @@ Store Acc at *CURRENT_BYTE
 
 Label MAIN_LOOP
 
+; Initial Checks
+
 Load Acc with *CURRENT_PAGE
 Compare with Xh
 Jump if Not Zero to .EXIT
@@ -51,6 +54,33 @@ Jump if Not Zero to .EXIT
 Load Acc with #128
 Compare with Indirect Xhl
 Jump if Zero to .EXIT
+
+; Filter Section
+
+Load Acc with Absolute $7E00
+Compare with #0
+Jump if Zero to .DISPLAY_ENTRY
+
+Move Xh into Yh
+Move Xl into Acc
+Add #14
+Move Acc into Yl
+
+Load Acc with Absolute $7E00
+Compare with Indirect Yhl
+
+Jump if Zero to .DISPLAY_ENTRY
+
+Move Xl into Acc
+Add #$10
+Move Acc into Xl
+
+Jump if Carry to .EXIT
+Jump to .MAIN_LOOP
+
+Label DISPLAY_ENTRY
+
+; Prepare Output
 
 Load Acc with Constant NWL
 Store Acc at Paged $01
@@ -66,6 +96,9 @@ Label DISPLAY_LOOP_NAME
 Load Acc with Indirect Xhl
 Compare with #0
 Jump if Not Zero to .SKIP_FIX
+
+; Add $20 to 0, makes it a space
+
 Add Constant SPC
 Label SKIP_FIX
 Store Acc at Paged $01
